@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">CMHapp</string>
+    <string name = "loginButton">Login Button</string>
+    <string name = "searchButton">Search Nearby Meetings</string>
+    <string name = "mmapButton">Meetings Map</string>
+</resources>
