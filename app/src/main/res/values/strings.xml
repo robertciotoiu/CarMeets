@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">CMHapp</string>
-    <string name = "loginButton">Login Button</string>
-    <string name = "searchButton">Search Nearby Meetings</string>
-    <string name = "mmapButton">Meetings Map</string>
+    <string name="loginButton">Log In</string>
+    <string name="searchButton">Nearby Meetings</string>
+    <string name="mmapButton">Meetings Map</string>
+    <string name="pickLocation">Pick Location</string>
+    <string name="api_key">AIzaSyDdcZQ6aTfa3qyJpseu2BSbCpWfjzO0EGQ</string>
 </resources>
