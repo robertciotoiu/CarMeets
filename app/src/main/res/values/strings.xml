@@ -4,5 +4,13 @@
     <string name="searchButton">Nearby Meetings</string>
     <string name="mmapButton">Meetings Map</string>
     <string name="pickLocation">Pick Location</string>
+    <string name="CreateMeeting">Create Meeting</string>
+    <string name="dateSelection">Choose date</string>
+    <string name="timeSelection">Choose time</string>
+    <string name="coordinates">Coordinates</string>
+    <string name="locationString">Location</string>
+    <string name="meetingDescription">Meeting Description</string>
+    <string name="confirmDate">Confirm Date</string>
+    <string name="confirmTime">Confirm Time</string>
     <string name="api_key">AIzaSyDdcZQ6aTfa3qyJpseu2BSbCpWfjzO0EGQ</string>
 </resources>

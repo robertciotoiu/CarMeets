@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "324072382171",
+    "firebase_url": "https://carmeetsapp-d1c58.firebaseio.com",
+    "project_id": "carmeetsapp-d1c58",
+    "storage_bucket": "carmeetsapp-d1c58.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:324072382171:android:fbf20a0c39e0ec0a",
+        "android_client_info": {
+          "package_name": "com.example.robi.cmhapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "324072382171-e7f6ajqup1utl86arc62ebqtijncnbss.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.robi.cmhapp",
+            "certificate_hash": "93a8234c3db6d69b63935477a3ed6927c7191c8b"
+          }
+        },
+        {
+          "client_id": "324072382171-608n07b5abccpgk915r9vf7iba6bdd0j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDDOzBNfMEDBdNh_V98jxvfajYANJtcYQQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "324072382171-608n07b5abccpgk915r9vf7iba6bdd0j.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -3,17 +3,21 @@ package com.example.robi.cmhapp
 import java.util.*
 
 class MeetingEvent {
-    private var Name:String =  ""
-    private var Date:Date = Date()
-    private var Location:String = ""
-    private var Description:String = ""
+    var Name:String = ""
+    var Date:String = ""
+    var Time:String = ""
+    var Coordinates:String = ""
+    var Location:String = ""
+    var Description:String = ""
 
     constructor()
     {}
-    constructor(n:String, d:Date, l:String, des:String)
+    constructor(n:String, d:String, t:String,c:String , l:String, des:String)
     {
         this.Name = n
         this.Date = d
+        this.Time = t
+        this.Coordinates = c
         this.Location = l
         this.Description = des
     }
