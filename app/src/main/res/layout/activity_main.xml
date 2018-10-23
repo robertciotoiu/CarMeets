@@ -28,6 +28,7 @@
             android:textColor="#00717D"
             android:textSize="30sp"
             android:background="@drawable/buttondesign"
+            android:onClick="sendMessage2"
 
             android:text="@string/searchButton"
             android:layout_width="270dp"

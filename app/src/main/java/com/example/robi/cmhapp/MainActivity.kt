@@ -20,12 +20,11 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         hideStatusBar()
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().setNavigationBarColor(getResources().getColor(android.R.color.transparent))
-            setFullScreenFlags()
-            hasSoftNavigationBar()
-            changeFonts()
-        }
+        getWindow().setNavigationBarColor(getResources().getColor(android.R.color.transparent))
+        setFullScreenFlags()
+        hasSoftNavigationBar()
+        changeFonts()
+
 
     }
 
@@ -70,6 +69,11 @@ class MainActivity : AppCompatActivity() {
 
     fun sendMessage(view: View) {
         val intent = Intent(this@MainActivity, FormActivity::class.java)
+        startActivity(intent)
+    }
+
+    fun sendMessage2(view: View) {
+        val intent = Intent(this@MainActivity, DisplayEventsActivity::class.java)
         startActivity(intent)
     }
 

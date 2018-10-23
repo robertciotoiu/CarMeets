@@ -12,6 +12,7 @@ import android.view.WindowManager
 import android.Manifest
 import android.app.Activity
 import android.app.DatePickerDialog
+import android.content.ContentResolver
 import android.content.pm.PackageManager
 import android.support.v4.app.ActivityCompat
 import android.widget.Button
@@ -24,9 +25,17 @@ import android.support.annotation.NonNull
 import com.google.android.gms.location.places.ui.PlacePicker.getAttributions
 import com.google.android.gms.location.places.Place
 import android.content.Intent
+import android.database.Cursor
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.drawable.BitmapDrawable
+import android.media.Image
+import android.net.Uri
+import android.provider.MediaStore
 import android.text.format.Time
 import android.util.Log
 import android.widget.DatePicker
+import android.widget.ImageView
 import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.auth.FirebaseAuth
@@ -38,6 +47,9 @@ import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.activity_form.*
 import kotlinx.android.synthetic.main.activity_form.view.*
+import java.io.ByteArrayOutputStream
+import java.io.IOException
+import java.net.URI
 import java.util.*
 
 
@@ -65,7 +77,7 @@ class FormActivity : AppCompatActivity(),IScreenFormat {
         return !realSize.equals(displaySize)
     }
     override fun hideStatusBar() {
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_form)
         // Hide the status bar.
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
         // Remember that you should never show the action bar if the
@@ -74,7 +86,7 @@ class FormActivity : AppCompatActivity(),IScreenFormat {
     }
 
     private val MY_PERMISSION_FINE_LOCATION = 101
-    private val PLACE_PICKER_REQUEST = 1
+    private val PLACE_PICKER_REQUEST = 2
 
     private fun requestPermission() {
         if (ActivityCompat.checkSelfPermission(
@@ -103,6 +115,9 @@ class FormActivity : AppCompatActivity(),IScreenFormat {
         }
     }
 
+    val PICK_IMAGE = 1
+
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == PLACE_PICKER_REQUEST) {
@@ -118,7 +133,34 @@ class FormActivity : AppCompatActivity(),IScreenFormat {
 //                }
             }
         }
+        if (PICK_IMAGE==requestCode && resultCode == Activity.RESULT_OK && data!=null && data.data!=null) {
+            val uri : Uri? = data.data
+            try {
+                var imageView:ImageView =  findViewById(R.id.imagePicker)
+                var bitmap: Bitmap = MediaStore.Images.Media.getBitmap(contentResolver, uri)
+                imageView.setImageBitmap(bitmap)
+            }catch (e:IOException)
+            {
+                e.printStackTrace()
+            }
+        }
     }
+
+    private fun getRealPathFromURI(contentUri: Uri): String {
+
+        // can post image
+        val proj = arrayOf(MediaStore.Images.Media.DATA)
+        val cursor = managedQuery(contentUri,proj, // WHERE clause selection arguments (none)
+            null, null, null
+        )// Which columns to return
+        // WHERE clause; which rows to return (all rows)
+        // Order-by clause (ascending by name)
+        val column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+        cursor.moveToFirst()
+
+        return cursor.getString(column_index)
+    }
+
     fun screenAdjuster(){
         getWindow().setNavigationBarColor(getResources().getColor(android.R.color.transparent))
         setFullScreenFlags()
@@ -134,13 +176,8 @@ class FormActivity : AppCompatActivity(),IScreenFormat {
 
         val currentUser = mAuth.currentUser
 
-
-
-
         //if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) // Unnecessary because I have API min level 23 in the gradle
         screenAdjuster()//set the navBar invisible, etc(design stuff)
-
-
         run{
             requestPermission()
             setContentView(R.layout.activity_form)
@@ -173,6 +210,8 @@ class FormActivity : AppCompatActivity(),IScreenFormat {
                 locationPicker.visibility = View.GONE
                 description.visibility = View.GONE
                 submitButton.visibility = View.GONE
+                textView.visibility = View.GONE
+                imagePicker.visibility = View.GONE
                 datePicker.visibility = View.VISIBLE
                 confirmDate.visibility = View.VISIBLE
 
@@ -202,6 +241,8 @@ class FormActivity : AppCompatActivity(),IScreenFormat {
                 locationPicker.visibility = View.VISIBLE
                 description.visibility = View.VISIBLE
                 submitButton.visibility = View.VISIBLE
+                textView.visibility = View.VISIBLE
+                imagePicker.visibility = View.VISIBLE
                 datePicker.visibility = View.GONE
                 confirmDate.visibility = View.GONE
             }
@@ -213,6 +254,8 @@ class FormActivity : AppCompatActivity(),IScreenFormat {
                 locationPicker.visibility = View.GONE
                 description.visibility = View.GONE
                 submitButton.visibility = View.GONE
+                textView.visibility = View.GONE
+                imagePicker.visibility = View.GONE
                 timePicker.visibility = View.VISIBLE
                 confirmTime.visibility = View.VISIBLE
 
@@ -223,7 +266,6 @@ class FormActivity : AppCompatActivity(),IScreenFormat {
                 timeSelection.text = s
 
             }
-
             confirmTime.setOnClickListener {
                 var hour = timePicker.hour
                 var minute = timePicker.minute
@@ -237,52 +279,62 @@ class FormActivity : AppCompatActivity(),IScreenFormat {
                 locationPicker.visibility = View.VISIBLE
                 description.visibility = View.VISIBLE
                 submitButton.visibility = View.VISIBLE
+                textView.visibility = View.VISIBLE
+                imagePicker.visibility = View.VISIBLE
                 timePicker.visibility = View.GONE
                 confirmTime.visibility = View.GONE
 
             }
+
             //submit meeting button
+            submitButton.setOnClickListener {
+                var DataToUpload:String = compress_file(imagePicker).toString()
 
-        }//location, time and date pickers
+                val meetingRef = mDatabase.child("meetings")
 
-        submitButton.setOnClickListener {
-            val meetingRef = mDatabase.child("meetings")
-            //newMeetingRef.setValue(MeetingEvent(meetingName.text.toString(), dateSelection.text.toString(),timeSelection.text.toString(),coordinates.text.toString(),locationInfo.text.toString(),description.text.toString()),async)
-            meetingRef.push().setValue(MeetingEvent(meetingName.text.toString(), dateSelection.text.toString(),timeSelection.text.toString(),coordinates.text.toString(),locationInfo.text.toString(),description.text.toString()),async)
+                meetingRef.push().setValue(MeetingEvent(meetingName.text.toString(), dateSelection.text.toString(),timeSelection.text.toString(),coordinates.text.toString(),locationInfo.text.toString(),description.text.toString(),DataToUpload),async)
+            }//the submit button
+        }//location, time and date pickers and the submit button
 
-// We can also chain the two calls together
-            //mDatabase.child("meetings").child("name").setValue(meetingName.text.toString())
-            //mDatabase.child("meetings").child("date").setValue(dateSelection.text.toString())
-            //mDatabase.child("meetings").child("time").setValue(timeSelection.text.toString())
-            //mDatabase.child("meetings").child("coordinates").setValue(coordinates.text.toString())
-            //mDatabase.child("meetings").child("location").setValue(locationInfo.text.toString())
-            //mDatabase.child("meetings").child("description").setValue(description.text.toString())
-            //.add(meetingEvent)
-            //.addOnSuccessListener(object : OnSuccessListener<DocumentReference> {
-             //   override fun onSuccess(documentReference : DocumentReference ) {
-             //   Log.d("Success", "DocumentSnapshot added with ID: " + documentReference.id)
-              //  }
-            //})
-            //.addOnFailureListener(object : OnFailureListener {
-              //  override fun onFailure(ex: Exception) {
-               // Log.w("Failed", "Error adding document", ex)
-                //}
-            //})
-            //have to make a class to handle the date&time
-            //to hide open the date and to hide the rest and after select the date to
-            //hide the date introduce info in a text label(handled by the class date handler and auto open the time select
-            //same thing for the time as for the date
-            //fun loadDatabase(firebaseData: DatabaseReference) {
-//                val meetingEvent = MeetingEvent(meetingName.text.toString(), dateSelection.text.toString(),timeSelection.text.toString(),coordinates.text.toString(),locationInfo.text.toString(),description.text.toString())
-//                val key = firebaseData.child("meetings").push().key
-//                meetingEvent.uuid = key
-//                firebaseData.child("meetings").child(key).setValue(it)
-//            }
-        }//the submit button
+        imagePicker.setOnClickListener{
+            val getIntent = Intent(Intent.ACTION_GET_CONTENT)
+            getIntent.type = "image/*"
 
+            val pickIntent = Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+            pickIntent.type = "image/*"
+
+            val chooserIntent = Intent.createChooser(getIntent, "Select Image")
+            chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, arrayOf(pickIntent))
+
+            startActivityForResult(chooserIntent, PICK_IMAGE)
+
+
+        }
+
+
+
+        //var uploadTask = mountainsRef.putBytes(data)
+        //uploadTask.addOnFailureListener { exception ->
+            // Handle unsuccessful uploads
+        //}.addOnSuccessListener { taskSnapshot ->
+            // taskSnapshot.metadata contains file metadata such as size, content-type, etc.
+            // ...
+
+    }
+    private fun compress_file(imagePicker: ImageView):ByteArray
+    {
+        imagePicker.isDrawingCacheEnabled = true
+        imagePicker.buildDrawingCache()
+        val bitmap = (imagePicker.drawable as BitmapDrawable).bitmap
+        val baos = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
+        val data = baos.toByteArray()
+        //var uploadTask = mountainsRef.putBytes(data)
+        return data
     }
 
 }
+
 
 
 //    private fun locationSelector()
