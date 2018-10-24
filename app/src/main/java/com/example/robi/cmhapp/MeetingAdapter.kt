@@ -15,6 +15,14 @@ import android.widget.*
 import com.example.robi.cmhapp.R.drawable.meetingicon
 import kotlinx.android.synthetic.main.activity_display_events.view.*
 import kotlinx.android.synthetic.main.listview_meeting.view.*
+import android.graphics.BitmapFactory
+import android.graphics.Bitmap
+import android.opengl.ETC1.getHeight
+import android.opengl.ETC1.getWidth
+import android.os.Build
+import java.io.File
+import java.util.*
+
 
 class MeetingAdapter(val mCtx : Context , val layoutId:Int , val meetingList:List<MeetingEvent>):ArrayAdapter<MeetingEvent>(mCtx,layoutId,meetingList) {
 
@@ -40,8 +48,22 @@ class MeetingAdapter(val mCtx : Context , val layoutId:Int , val meetingList:Lis
         var textView_location:TextView  =  view.findViewById(R.id.LocationMeeting)
 
         val meeting = meetingList[p0]
+//        var imgBA:ByteArray = meeting.Image.toByteArray()
+//        val bitmap = BitmapFactory.decodeByteArray(imgBA, 0, imgBA.size)
+        val charset = Charsets.UTF_8
+        val byteArray = meeting.Image.toByteArray(charset)
+        //var theimg = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
 
-        imageView.setImageResource(meetingicon)
+        val imageByteArray = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            Base64.getDecoder().decode(meeting.Image)
+        } else {
+            TODO("VERSION.SDK_INT < O")
+        }
+        val theimg = BitmapFactory.decodeByteArray(imageByteArray, 0, imageByteArray.size)
+
+        imageView.setImageBitmap(theimg)
+        //theimg.recycle();
+
         //imageView.setImageBitmap(meeting.Image)//object.image retrieved and converted to bitmap from firebase
         textView_name.text = meeting.Name
         textView_date.text = meeting.Date

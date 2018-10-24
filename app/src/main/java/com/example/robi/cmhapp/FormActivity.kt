@@ -10,6 +10,8 @@ import android.view.WindowManager
 
 
 import android.Manifest
+import android.annotation.SuppressLint
+import android.annotation.TargetApi
 import android.app.Activity
 import android.app.DatePickerDialog
 import android.content.ContentResolver
@@ -50,6 +52,7 @@ import kotlinx.android.synthetic.main.activity_form.view.*
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.net.URI
+import java.nio.charset.Charset
 import java.util.*
 
 
@@ -288,11 +291,11 @@ class FormActivity : AppCompatActivity(),IScreenFormat {
 
             //submit meeting button
             submitButton.setOnClickListener {
-                var DataToUpload:String = compress_file(imagePicker).toString()
+
 
                 val meetingRef = mDatabase.child("meetings")
 
-                meetingRef.push().setValue(MeetingEvent(meetingName.text.toString(), dateSelection.text.toString(),timeSelection.text.toString(),coordinates.text.toString(),locationInfo.text.toString(),description.text.toString(),DataToUpload),async)
+                meetingRef.push().setValue(MeetingEvent(meetingName.text.toString(), dateSelection.text.toString(),timeSelection.text.toString(),coordinates.text.toString(),locationInfo.text.toString(),description.text.toString(),compress_file(imagePicker)),async)
             }//the submit button
         }//location, time and date pickers and the submit button
 
@@ -321,7 +324,8 @@ class FormActivity : AppCompatActivity(),IScreenFormat {
             // ...
 
     }
-    private fun compress_file(imagePicker: ImageView):ByteArray
+
+    private fun compress_file(imagePicker: ImageView):String
     {
         imagePicker.isDrawingCacheEnabled = true
         imagePicker.buildDrawingCache()
@@ -329,9 +333,20 @@ class FormActivity : AppCompatActivity(),IScreenFormat {
         val baos = ByteArrayOutputStream()
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
         val data = baos.toByteArray()
-        //var uploadTask = mountainsRef.putBytes(data)
-        return data
+        var DataToUpload:String = data.toString(Charsets.UTF_8)
+
+        val bytes = data
+        val base64 = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            Base64.getEncoder().encodeToString(bytes)
+        } else {
+            TODO("VERSION.SDK_INT < O")
+        }
+        return base64
+
+
+        //return DataToUpload
     }
+
 
 }
 
