@@ -17,10 +17,15 @@ import kotlinx.android.synthetic.main.activity_display_events.view.*
 import kotlinx.android.synthetic.main.listview_meeting.view.*
 import android.graphics.BitmapFactory
 import android.graphics.Bitmap
+import android.location.Address
+import android.location.Geocoder
 import android.opengl.ETC1.getHeight
 import android.opengl.ETC1.getWidth
 import android.os.Build
+import com.google.android.gms.location.places.Place
+import com.google.android.gms.location.places.ui.PlacePicker
 import java.io.File
+import java.lang.Exception
 import java.util.*
 
 
@@ -48,12 +53,6 @@ class MeetingAdapter(val mCtx : Context , val layoutId:Int , val meetingList:Lis
         var textView_location:TextView  =  view.findViewById(R.id.LocationMeeting)
 
         val meeting = meetingList[p0]
-//        var imgBA:ByteArray = meeting.Image.toByteArray()
-//        val bitmap = BitmapFactory.decodeByteArray(imgBA, 0, imgBA.size)
-        val charset = Charsets.UTF_8
-        val byteArray = meeting.Image.toByteArray(charset)
-        //var theimg = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
-
         val imageByteArray = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             Base64.getDecoder().decode(meeting.Image)
         } else {
@@ -62,14 +61,40 @@ class MeetingAdapter(val mCtx : Context , val layoutId:Int , val meetingList:Lis
         val theimg = BitmapFactory.decodeByteArray(imageByteArray, 0, imageByteArray.size)
 
         imageView.setImageBitmap(theimg)
-        //theimg.recycle();
 
-        //imageView.setImageBitmap(meeting.Image)//object.image retrieved and converted to bitmap from firebase
         textView_name.text = meeting.Name
         textView_date.text = meeting.Date
-        textView_location.text = meeting.Location
+        textView_location.text = try{get_locality_and_country(meeting)}catch(e:Exception){"Not Available"}
         textView_time.text = meeting.Time
 
         return view
     }
+    private fun get_locality_and_country(meeting:MeetingEvent):String{//to show only city and country in the listview :
+        var someString = meeting.Coordinates
+        var index = someString.indexOf(",");  // Gets the first index where a space occours
+        var latitude = someString.substring(0, index); // Gets the first part]
+        var longitude = someString.substring(index + 1);  // Gets the text part
+
+        var geocoder:Geocoder = Geocoder(this.context)
+        var addresses: List<Address>  = geocoder.getFromLocation(latitude.toDouble(),longitude.toDouble(), 1);
+
+        var city_and_country:String = addresses[0].locality.toString()+","+addresses[0].countryName.toString()
+        return city_and_country
+    }
+
+//    fun resizeBitmap(bitmap:Bitmap):Bitmap{
+//        var currentBitmapWidth = bitmap.getWidth();
+//        var currentBitmapHeight = bitmap.getHeight();
+//
+//        var ivWidth = 109;
+//        var ivHeight = 113;
+//        var newWidth = ivWidth;
+//
+//        var newHeight = Math.floor(currentBitmapHeight *( ivHeight / currentBitmapWidth).toDouble());
+//
+//        var nbitmap = Bitmap.createScaledBitmap(bitmap, newWidth, newHeight.toInt(), true);
+//
+//        return nbitmap
+//    }
+
 }

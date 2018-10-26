@@ -6,5 +6,7 @@
         <item name="windowNoTitle">true</item>
         <item name="android:windowFullscreen">true</item>
     </style>
+    <style name="MyDatePicker" parent="android:Widget.Material.Light.DatePicker">
 
+    </style>
 </resources>

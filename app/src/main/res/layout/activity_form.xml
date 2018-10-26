@@ -5,30 +5,36 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:id="@+id/constraintLayout2"
         android:background="@drawable/background_image_res"
         tools:context=".FormActivity">
 
+
     <EditText
             android:layout_width="288dp"
-            android:layout_height="176dp"
+            android:layout_height="111dp"
             android:inputType="textPersonName"
             android:ems="10"
             android:id="@+id/description"
+            android:textColor="#FFFFFF"
+            android:backgroundTint="#FFFFFF"
             android:hint="@string/meetingDescription"
-            android:layout_marginEnd="8dp" app:layout_constraintEnd_toEndOf="parent" android:layout_marginRight="8dp"
-            android:layout_marginStart="8dp" app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginLeft="8dp"
-            app:layout_constraintBottom_toTopOf="@+id/submitButton" android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/locationPicker"/>
+            app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="480dp"
+            app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp" app:layout_constraintStart_toStartOf="parent"
+            android:textColorHint="#80FFFFFF"/>
 
     <DatePicker android:layout_width="348dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/datePicker"
-
+                android:calendarTextColor="#FFFFFF"
+                android:background="#FFFFFF"
+                android:headerDayOfMonthTextAppearance="@color/common_google_signin_btn_text_dark_default"
                 android:visibility="gone"
                 app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"/>
+                app:layout_constraintBottom_toBottomOf="parent"
+    />
     <TimePicker android:layout_width="360dp" android:layout_height="351dp"
                 android:id="@+id/timePicker"
                 android:visibility="gone"
@@ -38,18 +44,17 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"/>
     <Button
+            android:gravity="bottom|center"
+            android:textColor="#80FFFFFF"
+            android:background="@drawable/buttonselectordesign"
             android:text="@string/pickLocation"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="108dp"
+            android:layout_height="90dp"
             android:id="@+id/locationPicker"
             android:name="com.google.android.geo.API_KEY"
-            android:layout_marginEnd="8dp"
-            app:layout_constraintEnd_toEndOf="parent" android:layout_marginRight="8dp"
-            app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/meetingName"
-            app:layout_constraintBottom_toTopOf="@+id/description"
-            app:layout_constraintHorizontal_bias="0.502" android:layout_marginTop="150dp"/>
+            app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="245dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
     <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -57,11 +62,12 @@
             android:ems="10"
             android:id="@+id/meetingName"
             android:hint="Meeting Name"
-            android:layout_marginTop="32dp"
-            app:layout_constraintTop_toTopOf="parent" android:layout_marginEnd="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginStart="8dp"
-            app:layout_constraintHorizontal_bias="0.307" app:layout_constraintStart_toStartOf="parent"/>
+            android:backgroundTint="#FFFFFF"
+            android:layout_marginTop="50dp"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="8dp" app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginEnd="8dp" app:layout_constraintEnd_toEndOf="parent" android:textColor="#FFFFFF"
+            android:textColorHint="#80FFFFFF"/>
     <EditText
             android:layout_width="82dp"
             android:layout_height="wrap_content"
@@ -72,7 +78,7 @@
             android:id="@+id/locationInfo"
             app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent"
-    />
+            android:layout_marginTop="10dp"/>
     <EditText
             android:layout_width="78dp"
             android:layout_height="43dp"
@@ -86,70 +92,103 @@
             app:layout_constraintEnd_toEndOf="parent"
     />
     <Button
+            android:textColor="#FFFFFF"
+            android:letterSpacing="0.0125"
+            android:textSize="14sp"
             android:text="@string/CreateMeeting"
-            android:layout_width="wrap_content"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
+            android:background="@drawable/buttondesign"
             android:id="@+id/submitButton"
-            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginEnd="8dp" android:layout_marginRight="8dp"
-            app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp" android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/description" app:layout_constraintHorizontal_bias="0.502"
-            android:layout_marginBottom="20dp"/>
+            android:layout_marginTop="600dp" app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
+            app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"/>
     <Button
+            android:gravity="bottom|center"
+            android:textColor="#80FFFFFF"
+            android:background="@drawable/buttonselectordesign"
             android:text="@string/dateSelection"
             android:layout_width="125dp"
-            android:layout_height="wrap_content"
+            android:layout_height="90dp"
             android:id="@+id/dateSelection" app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginLeft="8dp" android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp" app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginBottom="8dp" app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintVertical_bias="0.3" android:layout_marginEnd="8dp"
-            app:layout_constraintEnd_toStartOf="@+id/timeSelection" android:layout_marginRight="8dp"/>
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="140dp" app:layout_constraintTop_toTopOf="parent"
+    />
     <Button
+            android:gravity="bottom|center"
+            android:textColor="#80FFFFFF"
+            android:background="@drawable/buttonselectordesign"
             android:text="@string/timeSelection"
             android:layout_width="125dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/timeSelection" app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginTop="8dp"
-            app:layout_constraintTop_toTopOf="parent" android:layout_marginBottom="8dp"
-            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintVertical_bias="0.3"
-            app:layout_constraintStart_toEndOf="@+id/dateSelection"
-    />
-    <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_height="90dp"
+            android:id="@+id/timeSelection"
+            android:layout_marginTop="140dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="12dp"/>
+    <Button
+            android:textColor="#FFFFFF"
+            android:letterSpacing="0.0125"
+            android:textSize="14sp"
+            android:background="@drawable/buttondesign"
+            android:layout_width="150dp" android:layout_height="wrap_content"
             android:text="@string/confirmDate"
             app:layout_constraintTop_toBottomOf="@id/datePicker"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginLeft="8dp"
             android:visibility="gone"
             android:id="@+id/confirmDate"
             app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
-            app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp" android:layout_marginRight="8dp"/>
-    <Button android:layout_width="wrap_content" android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"/>
+    <Button
+            android:textColor="#FFFFFF"
+            android:letterSpacing="0.0125"
+            android:textSize="14sp"
+            android:background="@drawable/buttondesign"
+            android:layout_width="150dp" android:layout_height="wrap_content"
             android:text="@string/confirmTime"
             app:layout_constraintTop_toBottomOf="@id/timePicker"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginLeft="8dp"
             android:visibility="gone"
             android:id="@+id/confirmTime"
             app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
-            app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp" android:layout_marginRight="8dp"/>
+            app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"/>
     <ImageView
             android:layout_width="55dp"
-            android:layout_height="0dp" app:srcCompat="@drawable/meetingicon"
+            android:layout_height="0dp" app:srcCompat="@drawable/icon_image_picker_steering_wheel"
             android:id="@+id/imagePicker"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginBottom="360dp" app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="150dp"/>
+            android:layout_marginTop="396dp"
+            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintHorizontal_bias="0.488"/>
     <TextView
-            android:text="Choose Meeting Photo:"
+            android:text="Click on the steering wheel to select meeting's icon"
+            android:textColor="#A0FFFFFF"
+            android:textSize="14sp"
             android:layout_width="wrap_content"
-            android:layout_height="33dp"
+            android:layout_height="20dp"
             android:id="@+id/textView"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="100dp"
-            app:layout_constraintBottom_toBottomOf="parent" android:layout_marginBottom="350dp"/>
+            android:layout_marginTop="374dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.513"/>
+
+    <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content"
+               android:background="@drawable/icon_date_picker"
+               android:id="@+id/imageDatePicker"
+               android:layout_marginTop="150dp"
+               app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
+               android:layout_marginStart="50dp"/>
+    <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content"
+               android:background="@drawable/icon_time_picker"
+               android:id="@+id/imageTimePicker"
+               android:layout_marginTop="150dp"
+               app:layout_constraintTop_toTopOf="parent"
+               app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="50dp"/>
+    <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content"
+               android:background="@drawable/icon_location_picker"
+               android:id="@+id/imageLocationPicker"
+               android:layout_marginTop="255dp"
+               app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
+               app:layout_constraintEnd_toEndOf="parent"
+    />
 </android.support.constraint.ConstraintLayout>

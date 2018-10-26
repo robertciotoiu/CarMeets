@@ -35,6 +35,8 @@
         </activity>
         <activity android:name=".DisplayEventsActivity">
         </activity>
+        <activity android:name=".listViewItemExpand">
+        </activity>
     </application>
 
 </manifest>

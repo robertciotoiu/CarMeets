@@ -34,6 +34,10 @@ import android.graphics.drawable.BitmapDrawable
 import android.media.Image
 import android.net.Uri
 import android.provider.MediaStore
+import android.renderscript.Allocation
+import android.renderscript.Element
+import android.renderscript.RenderScript
+import android.renderscript.ScriptIntrinsicBlur
 import android.text.format.Time
 import android.util.Log
 import android.widget.DatePicker
@@ -127,13 +131,8 @@ class FormActivity : AppCompatActivity(),IScreenFormat {
             if (resultCode == Activity.RESULT_OK) {
                 val place = PlacePicker.getPlace(this@FormActivity, data!!)
                 locationPicker.setText("Location selected")// + place.address)
-                coordinates.setText(place.getName())
-                locationInfo.setText(place.getAddress())
-//                if (place.attributions == null) {
-//                    attributionText.loadData("no attribution", "text/html; charset=utf-8", "UFT-8")
-//                } else {
-//                    attributionText.loadData(place.attributions!!.toString(), "text/html; charset=utf-8", "UFT-8")
-//                }
+                coordinates.setText(""+place.latLng.latitude+","+place.latLng.longitude)
+                locationInfo.setText(place.address)
             }
         }
         if (PICK_IMAGE==requestCode && resultCode == Activity.RESULT_OK && data!=null && data.data!=null) {
@@ -215,6 +214,9 @@ class FormActivity : AppCompatActivity(),IScreenFormat {
                 submitButton.visibility = View.GONE
                 textView.visibility = View.GONE
                 imagePicker.visibility = View.GONE
+                imageDatePicker.visibility = View.GONE
+                imageTimePicker.visibility = View.GONE
+                imageLocationPicker.visibility = View.GONE
                 datePicker.visibility = View.VISIBLE
                 confirmDate.visibility = View.VISIBLE
 
@@ -246,6 +248,9 @@ class FormActivity : AppCompatActivity(),IScreenFormat {
                 submitButton.visibility = View.VISIBLE
                 textView.visibility = View.VISIBLE
                 imagePicker.visibility = View.VISIBLE
+                imageDatePicker.visibility = View.VISIBLE
+                imageTimePicker.visibility = View.VISIBLE
+                imageLocationPicker.visibility = View.VISIBLE
                 datePicker.visibility = View.GONE
                 confirmDate.visibility = View.GONE
             }
@@ -259,6 +264,9 @@ class FormActivity : AppCompatActivity(),IScreenFormat {
                 submitButton.visibility = View.GONE
                 textView.visibility = View.GONE
                 imagePicker.visibility = View.GONE
+                imageDatePicker.visibility = View.GONE
+                imageTimePicker.visibility = View.GONE
+                imageLocationPicker.visibility = View.GONE
                 timePicker.visibility = View.VISIBLE
                 confirmTime.visibility = View.VISIBLE
 
@@ -284,6 +292,9 @@ class FormActivity : AppCompatActivity(),IScreenFormat {
                 submitButton.visibility = View.VISIBLE
                 textView.visibility = View.VISIBLE
                 imagePicker.visibility = View.VISIBLE
+                imageDatePicker.visibility = View.VISIBLE
+                imageTimePicker.visibility = View.VISIBLE
+                imageLocationPicker.visibility = View.VISIBLE
                 timePicker.visibility = View.GONE
                 confirmTime.visibility = View.GONE
 
@@ -294,8 +305,8 @@ class FormActivity : AppCompatActivity(),IScreenFormat {
 
 
                 val meetingRef = mDatabase.child("meetings")
-
-                meetingRef.push().setValue(MeetingEvent(meetingName.text.toString(), dateSelection.text.toString(),timeSelection.text.toString(),coordinates.text.toString(),locationInfo.text.toString(),description.text.toString(),compress_file(imagePicker)),async)
+                if(meetingName.text!=null && dateSelection.text!=null && timeSelection.text!=null&&coordinates.text!=null&&locationInfo.text!=null&&description.text!=null&&imagePicker!=null)
+                    meetingRef.push().setValue(MeetingEvent(meetingName.text.toString(), dateSelection.text.toString(),timeSelection.text.toString(),coordinates.text.toString(),locationInfo.text.toString(),description.text.toString(),compress_file(imagePicker)),async)
             }//the submit button
         }//location, time and date pickers and the submit button
 
@@ -314,17 +325,43 @@ class FormActivity : AppCompatActivity(),IScreenFormat {
 
         }
 
-
-
-        //var uploadTask = mountainsRef.putBytes(data)
-        //uploadTask.addOnFailureListener { exception ->
-            // Handle unsuccessful uploads
-        //}.addOnSuccessListener { taskSnapshot ->
-            // taskSnapshot.metadata contains file metadata such as size, content-type, etc.
-            // ...
+        //background +blur effect
+        constraintLayout2.background = BitmapDrawable(blurBitmap(BitmapFactory.decodeResource(resources,R.drawable.testbackground2)))
 
     }
+    fun blurBitmap(bitmap: Bitmap): Bitmap {
 
+        //Let's create an empty bitmap with the same size of the bitmap we want to blur
+        val outBitmap = Bitmap.createBitmap(bitmap.width, bitmap.height, Bitmap.Config.ARGB_8888)
+
+        //Instantiate a new Renderscript
+        val rs = RenderScript.create(applicationContext)
+
+        //Create an Intrinsic Blur Script using the Renderscript
+        val blurScript = ScriptIntrinsicBlur.create(rs, Element.U8_4(rs))
+
+        //Create the in/out Allocations with the Renderscript and the in/out bitmaps
+        val allIn = Allocation.createFromBitmap(rs, bitmap)
+        val allOut = Allocation.createFromBitmap(rs, outBitmap)
+
+        //Set the radius of the blur
+        blurScript.setRadius(25f)
+
+        //Perform the Renderscript
+        blurScript.setInput(allIn)
+        blurScript.forEach(allOut)
+
+        //Copy the final bitmap created by the out Allocation to the outBitmap
+        allOut.copyTo(outBitmap)
+
+        //recycle the original bitmap
+        bitmap.recycle()
+
+        //After finishing everything, we destroy the Renderscript.
+        rs.destroy()
+
+        return outBitmap
+    }
     private fun compress_file(imagePicker: ImageView):String
     {
         imagePicker.isDrawingCacheEnabled = true
@@ -333,7 +370,6 @@ class FormActivity : AppCompatActivity(),IScreenFormat {
         val baos = ByteArrayOutputStream()
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos)
         val data = baos.toByteArray()
-        var DataToUpload:String = data.toString(Charsets.UTF_8)
 
         val bytes = data
         val base64 = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -342,22 +378,9 @@ class FormActivity : AppCompatActivity(),IScreenFormat {
             TODO("VERSION.SDK_INT < O")
         }
         return base64
-
-
-        //return DataToUpload
     }
 
 
 }
-
-
-
-//    private fun locationSelector()
-//    {
-//
-//        val PLACE_PICKER_REQUEST = 1
-//        val builder = PlacePicker.IntentBuilder()
-//        startActivityForResult(builder.build(this), PLACE_PICKER_REQUEST)
-//    }
 
 

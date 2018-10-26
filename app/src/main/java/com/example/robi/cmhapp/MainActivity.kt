@@ -1,18 +1,21 @@
 package com.example.robi.cmhapp
 
-import android.graphics.Point
 import android.os.Build
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.annotation.RequiresApi
 import android.view.View
 import android.view.WindowManager
-import android.graphics.Typeface
 import android.support.v4.content.res.ResourcesCompat
 import kotlinx.android.synthetic.main.activity_main.*
 import android.content.Intent
-
-
+import android.graphics.*
+import android.graphics.drawable.BitmapDrawable
+import android.renderscript.Allocation
+import android.renderscript.Element
+import android.renderscript.RenderScript
+import android.renderscript.ScriptIntrinsicBlur
+import android.widget.ImageView
 
 
 class MainActivity : AppCompatActivity() {
@@ -25,16 +28,48 @@ class MainActivity : AppCompatActivity() {
         hasSoftNavigationBar()
         changeFonts()
 
-
+        constraintLayout1.background = BitmapDrawable(blurBitmap(BitmapFactory.decodeResource(resources,R.drawable.testbackground2)))
     }
+    fun blurBitmap(bitmap: Bitmap): Bitmap {
 
-    private fun changeFonts()
-    {
-        var typeFace: Typeface? = ResourcesCompat.getFont(this.applicationContext, R.font.freescpt)
+        //Let's create an empty bitmap with the same size of the bitmap we want to blur
+        val outBitmap = Bitmap.createBitmap(bitmap.width, bitmap.height, Bitmap.Config.ARGB_8888)
+
+        //Instantiate a new Renderscript
+        val rs = RenderScript.create(applicationContext)
+
+        //Create an Intrinsic Blur Script using the Renderscript
+        val blurScript = ScriptIntrinsicBlur.create(rs, Element.U8_4(rs))
+
+        //Create the in/out Allocations with the Renderscript and the in/out bitmaps
+        val allIn = Allocation.createFromBitmap(rs, bitmap)
+        val allOut = Allocation.createFromBitmap(rs, outBitmap)
+
+        //Set the radius of the blur
+        blurScript.setRadius(25f)
+
+        //Perform the Renderscript
+        blurScript.setInput(allIn)
+        blurScript.forEach(allOut)
+
+        //Copy the final bitmap created by the out Allocation to the outBitmap
+        allOut.copyTo(outBitmap)
+
+        //recycle the original bitmap
+        bitmap.recycle()
+
+        //After finishing everything, we destroy the Renderscript.
+        rs.destroy()
+
+        return outBitmap
+    }
+    private fun changeFonts() {
+        var typeFace: Typeface? = ResourcesCompat.getFont(this.applicationContext, R.font.rubik_medium)
         this.button!!.setTypeface(typeFace, Typeface.NORMAL)
         this.button2!!.setTypeface(typeFace, Typeface.NORMAL)
         this.button3!!.setTypeface(typeFace, Typeface.NORMAL)
     }
+
 
 
 
