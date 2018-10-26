@@ -22,7 +22,6 @@
             android:id="@+id/button"
             android:onClick="sendMessage"
             android:text="@string/loginButton"
-            android:layout_gravity="end"
             android:fontFamily="sans-serif"
             android:textColor="#FFFFFF"
             android:letterSpacing="0.0125"
@@ -55,6 +54,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginTop="350dp" app:layout_constraintTop_toTopOf="parent"/>
     <Button
+            android:onClick="sendMessage3"
             android:textColor="#FFFFFF"
             android:letterSpacing="0.0125"
             android:textSize="16sp"

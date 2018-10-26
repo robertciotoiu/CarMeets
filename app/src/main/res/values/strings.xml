@@ -13,4 +13,5 @@
     <string name="confirmDate">Confirm Date</string>
     <string name="confirmTime">Confirm Time</string>
     <string name="api_key">AIzaSyDdcZQ6aTfa3qyJpseu2BSbCpWfjzO0EGQ</string>
+    <string name="title_activity_meetings_map">Map</string>
 </resources>

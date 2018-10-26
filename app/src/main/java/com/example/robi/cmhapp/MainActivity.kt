@@ -112,4 +112,9 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
+    fun sendMessage3(view: View) {
+        val intent = Intent(this@MainActivity, MeetingsMapActivity::class.java)
+        startActivity(intent)
+    }
+
 }

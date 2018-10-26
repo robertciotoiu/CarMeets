@@ -37,6 +37,10 @@
         </activity>
         <activity android:name=".listViewItemExpand">
         </activity>
+        <activity
+                android:name=".MeetingsMapActivity"
+                android:label="@string/title_activity_meetings_map">
+        </activity>
     </application>
 
 </manifest>

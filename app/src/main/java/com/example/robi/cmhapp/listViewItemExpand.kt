@@ -76,6 +76,11 @@ class listViewItemExpand : AppCompatActivity(),IScreenFormat {
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(map))
             startActivity(intent)
         }
+        image1.setOnClickListener {
+            val map = "http://maps.google.co.in/maps?q=${itemLocation.text}"
+            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(map))
+            startActivity(intent)
+        }
 
         changeFonts()//maybe will crash here(it may need to move it down) /now it should be ok
         constraintLayout4.background = BitmapDrawable(blurBitmap(BitmapFactory.decodeResource(resources,R.drawable.testbackground2)))
